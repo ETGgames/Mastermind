@@ -3,6 +3,6 @@ This is the game that is implemented: http://www.cs.uni.edu/~wallingf/teaching/c
 
 Run project with make from a terminal:
 
-make clean
-make all
-make run
+make clean  
+make all  
+make run  
