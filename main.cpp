@@ -58,10 +58,6 @@ struct mm_code_maker
 		/// which takes in input an attempt
 		/// and provides feedback in terms of black hits
 		/// and white hits (see linked paper)
-		//std::cout << "\n\ngiving feedback\n";
-		//printVector(sequence);
-		//printVector(attempt);
-
 		std::vector<int> attemptIndexesUsed;
 		std::vector<int> sequenceIndexesUsed;
 		black_hits = 0;
@@ -143,21 +139,6 @@ struct mm_solver
 		//we could call learn if this is the first go as we know what the attemp will be for the first go - 0012
 		int highestNumberOfPartitions = 0;
 		std::vector<int> guessWithHighestPartitions;
-		//std::cout << "about to use this code list\n"  << codeList.size();
-		//printVectorOfVectors(codeList);
-		//		for(int i = 0; i < codeList.size(); i++){
-		//			std::vector<int> numberOfPartitionsKey = {-1};
-		//			int numberOfPartitionsForThisGuess = storedResultsForEverything[codeList[i]][numberOfPartitionsKey][0];
-		//			std::cout << "\nnumber of partitions for this guses" << numberOfPartitionsForThisGuess;
-		//			if (numberOfPartitionsForThisGuess > highestNumberOfPartitions){
-		//				highestNumberOfPartitions = numberOfPartitionsForThisGuess;
-		//				guessWithHighestPartitions = codeList[i];
-		//			}
-		//
-		//		}
-		//		std::cout<< "\nguess with highest partitions :" << highestNumberOfPartitions << "|||" << "code list size: " << codeList.size() << "\n";
-		//		printVector(guessWithHighestPartitions);
-		//		attempt = guessWithHighestPartitions;
 
 		for (int i = 0; i < masterList.size(); i++)
 		{
@@ -189,10 +170,6 @@ struct mm_solver
 					partitionsFoundForThisGuess.push_back(partition);
 				}
 			}
-			//			std::cout << "masterlist ";
-			//			printVector(masterList[i]);
-			//			std::cout  << "\nnumberOfPartitionsForThisGuess: " << numberOfPartitionsForThisGuess << "partitions\n";
-			//			printVectorOfVectors(partitionsFoundForThisGuess);
 
 			if (numberOfPartitionsForThisGuess > highestNumberOfPartitions)
 			{
@@ -201,15 +178,8 @@ struct mm_solver
 			}
 		}
 
-		//		std::cout<< "\nguess with highest partitions :" << highestNumberOfPartitions << "|||" << "code list size: " << codeList.size() << "\n";
-		//		printVector(guessWithHighestPartitions);
-		//
-		//		attempt = guessWithHighestPartitions;
-
 		if (codeList.size() != 1)
 		{
-			//			std::cout<< "\nguess with highest partitions :" << highestNumberOfPartitions << "|||" << "code list size: " << codeList.size() << "\n";
-			//			printVector(guessWithHighestPartitions);
 
 			attempt = guessWithHighestPartitions;
 		}
@@ -227,42 +197,16 @@ struct mm_solver
 		/// write your implementation here
 		std::vector<std::vector<int> > remainingGuesses;
 
-		//std::cout << "remaining guesses before \n" ;
-		//printVectorOfVectors(codeList);
-		//
-		//		mm_code_maker maker;
-		//		maker.init(length, num);
-		//		maker.sequence = attempt;
-		//
 		for (int j = 0; j < codeList.size(); j++)
 		{
 			if (storedResultsForEverything[attempt][codeList[j]][0] == black_hits && storedResultsForEverything[attempt][codeList[j]][1] == white_hits)
 			{
 				remainingGuesses.push_back(codeList[j]);
 			}
-			//
-			//			int bh = 0;
-			//			int wh = 0;
-			//
-			//			maker.give_feedback(codeList[j], bh, wh);
-			//			if (bh == black_hits && wh == white_hits){
-			//				remainingGuesses.push_back(codeList[j]);
-			//			}
+	
 		}
 		codeList = remainingGuesses;
-		//		std::cout << "remaining guesses after \n" ;
-		//		printVectorOfVectors(codeList);
-		//
 
-		//make guess list unique vector of remaining guesses
-		//		codeList = {};
-		//		for (int i = 0; i < remainingGuesses.size(); i++){
-		//			if (!isVectorInVector(remainingGuesses[i], codeList)){
-		//				codeList.push_back(remainingGuesses[i]);
-		//			}
-		//		}
-		//		std::cout << "new guess list\n" << codeList.size() ;
-		//		printVectorOfVectors(codeList);
 	}
 
 	void printStorageVector()
@@ -284,15 +228,10 @@ struct mm_solver
 	void getFeedbackForAllPossibilities()
 	{ //doing this to stop having to calculate give feedback every time and hence speed things up
 		/// write your implementation here
-		std::cout << "\ngetFeedbackForAllPossibilities called\n";
+		//std::cout << "\ngetFeedbackForAllPossibilities called\n";
 
 		for (int i = 0; i < masterList.size(); i++)
 		{
-			//std::cout << "|\n";
-
-			//			int numberOfPartitionsForThisGuess = 0;
-			//			std::vector<std::vector<int>> partitionsFoundForThisGuess;
-
 			mm_code_maker maker;
 			maker.init(length, num);
 			maker.sequence = masterList[i];
@@ -307,23 +246,6 @@ struct mm_solver
 
 				storedResultsForEverything[masterList[i]][codeList[j]].push_back(black_hits);
 				storedResultsForEverything[masterList[i]][codeList[j]].push_back(white_hits);
-				//
-				//				bool alreadyUsedPartition = false;
-				//
-				//				for(int k = 0; k < partitionsFoundForThisGuess.size(); k++){
-				//					//std::cout << "3";
-				//
-				//					if (partitionsFoundForThisGuess[k] == resultVector){
-				//						alreadyUsedPartition = true;
-				//					}
-				//				}
-				//
-				//
-				//				if (!alreadyUsedPartition){
-				//					numberOfPartitionsForThisGuess++;
-				//					partitionsFoundForThisGuess.push_back(resultVector);
-				//				}
-				//std::cout << "\npartitions found size: " << partitionsFoundForThisGuess.size() ;
 			}
 		}
 		std::cout << "\ngetFeedbackForAllPossibilities ended \n";
@@ -357,7 +279,6 @@ struct mm_solver
 	//each code possibility is represented by a vector not an int or string.
 	//std::vector<std::vector<int>> possibleRemainingCodes;
 	std::vector<std::vector<int> > codeList;
-	//std::vector<std::vector<int>> masterListStoredResults; //we only need to give feedback on every single possible combination once throughout the programme. therefore, calculate it once, store in this vector, then use this vector to lookup the result it would give //this is wrong but we need a way of storing everything so we don't need to calculate anything again, only retrieve.
 	std::map<std::vector<int>, std::map<std::vector<int>, std::vector<int> > > storedResultsForEverything;
 	//this will be in the form
 	//	[guess1: [
@@ -385,7 +306,7 @@ struct mm_solver
 /// otherwise it will intefere with the automated testing
 
 int main()
-{
+{ //a sensible input length would be 4 and possible values 5 
 	/// write the code for the main here in order to test your functions
 
 	/// our program uses random features so we need to call the function setting a random seed
@@ -425,13 +346,13 @@ int main()
 			/// we ask for feedback for the attempt
 
 			// we print the attempt
-			//			std::cout << "\nattempt: " << std::endl;
-			//			for(int i = 0; i < attempt.size(); i++){
-			//				std::cout << attempt[i] << " ";
-			//			}
-			//			std::cout << std::endl;
+						std::cout << "\nattempt: " << std::endl;
+						for(int i = 0; i < attempt.size(); i++){
+							std::cout << attempt[i] << " ";
+						}
+						std::cout << std::endl;
 			/// we print the feedback
-			//std::cout << "black pegs: " << black_hits << " " << " white pegs: " << white_hits << std::endl;
+			std::cout << "black pegs: " << black_hits << " " << " white pegs: " << white_hits << std::endl;
 			// we give the feedback to the solver so that it can learn
 			solver.learn(attempt, black_hits, white_hits);
 			attempts++;
@@ -450,16 +371,16 @@ int main()
 		{
 			std::cout << "after " << attempts << " attempts still no solution" << std::endl;
 		}
-		//		std::cout << "the sequence generated by the code maker was:" << std::endl;
-		//		for(int i = 0; i < maker.sequence.size(); i++){
-		//			std::cout << maker.sequence[i] << " ";
-		//		}
-		//		std::cout << std::endl;
+				std::cout << "the sequence generated by the code maker was:" << std::endl;
+				for(int i = 0; i < maker.sequence.size(); i++){
+					std::cout << maker.sequence[i] << " ";
+				}
+				std::cout << std::endl;
 
 	} //averaging loop
 	float average = (float)averageAttempts / (float)numberOfRoundsToAverage;
 
-	std::cout << "\nthe average number of attempts was: " << average;
+	std::cout << "\nthe average number of attempts was: " << average << std::endl;
 	return 0;
 }
 
