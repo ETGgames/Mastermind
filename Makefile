@@ -1,10 +1,13 @@
+CXX = g++
+CXXFLAGS = -std=c++11
+
 all: main.o
-	g++ -std=c++11 $^ -o prog
+	$(CXX) $(CXXFLAGS) $^ -o prog
 
 #implicit rule	
 #$< variable denotes the first dependency, %.cpp here.
 %.o : %.cpp %.hpp
-	g++ -std=c++11 -c $<
+	$(CXX) $(CXXFLAGS) -c $<
 
 #other variables, for information:
 #$@ the target

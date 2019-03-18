@@ -1,0 +1,39 @@
+Mastermind Report
+
+This project was all about finding the best trade off between time taken and number of attempts to complete the game. Therefore I found it necessary to implement multiple algorithms to realise this trade off. The first algorithm I used is called Maxparts as it chooses the code attempt based on the maximum number of partitions. The second algorithm chooses the first element from the remaining guesses, and the last algorithm, designed for huge lengths and nums, brute forces every possible guess until it gets a black hit for each guess.
+
+Give Feedback:
+
+Give feedback is rather simple, and thanks to my very clear variable naming convention that describes exactly what each variable does, it is self explanatory to a large degree, so I won’t translate it into pseudo code here. To prevent using multiple numbers from the attempt code or the sequence code, we use two vectors to keep track of which ones have already been used; attemptIndexesUsed and sequenceIndexesUsed. It checks if there are any black hits first, puts them in the tracker vectors, then checks if there are any white hits, while making sure to ignore any previous elements used. 
+
+Possible codes creation:
+
+createMasterListForFirstAttempt creates a vector with all the possible codes for the current length, but only keeps the codes which: start with 0, go up in order, and only contain the numbers 0, 1 and 2. This only happens for length less than 3 and num less than 4 because experimentally these only contain optimal (best first) guesses that do not have the digit 2. For all the other length and nums which have a 2 as the last digit (for example length 4 and num 6 has optimal first guess 0012) there is a procedural method of calculating the first optimal guess, which is to have [(length - 1)/2 rounded down] zeroes and the rest ones and the last as 2. This makes the first guess extremely fast as long as num^length is way too high.
+
+createMasterList is only called on the second attempt, and this time has every possible code that can be generated with the length and num. Now when we do the nested for loop that will be described below, the codeList loop will be much smaller as it is the second turn and many codes from it have been eradicated from the first turn’s learn.
+
+Maxparts Algorithm:
+
+This is the first of the three algorithms I use. It gives the lowest number of attempts but can take the most time, especially when it comes to very large num^length due to the nested for loop. 
+
+A unique partition is a {black, white} response that has not yet been found while giving feedback on an element from code list against a sequence from masterList. When it comes to executing create_attempt, there is a nested for loop. We essentially loop through every element in masterList (every possible combo), and see how many unique partitions each one generates when give_feedback is called against all the remaining possible guesses in codeList. We then select the element from masterList that has the highest number of partitions. This will be our next submitted attempt. The reason this algorithm works is because we are trying to gain as much information as possible from each attempt, so selecting the most varied guess will help us achieve this. Once codeList.size() == 1, we have narrowed down the possibilities to one guess and can do a final submission of codeList[0].
+
+The actual narrowing of codeList comes in the function learn(). All we do is essentially loop through the remaining possible codes (codeList) and throw out any codes that would not give the same partition (black white result) when given feedback against the recently submitted attempt as the recently submitted attempt got just before. The idea behind this is that we keep only the values that could have possibly generated that partition and removed all the ones that could not have. Now we try another attempt with the new narrowed down codeList.
+
+Random algorithm:
+
+This simply creates a codeList if it doesn’t exist, picks the first one from it (essentially random, just saves time a bit), then filters out all the wrong codes in the learn() just like it does for maxparts explained above. In fact, it uses the exact same code. It keeps doing this until there is only one left in the codeList. Because there is no nested for loop, it is much faster than maxparts but can still take a lot of time to create the codeList at the start, which is why we have the brute force algorithm below.
+
+Brute force algorithm:
+
+We go through each digit (ie units, tens, hundreds [but not actually, same concept though]) and for each one, we increment from -1 up until num until we get a black hit for that digit. Then we move to the next digit and do the same. All the digits start off as -1 because we only want to check one digit at a time for black hits with the attempt. This algorithm is extremely fast and can deal with huge lengths and nums at reasonable times ( 100 x 100 is ~10 seconds) but usually takes a lot of attempts. The max number of attempts is length x num, but we almost always get there before that. 
+
+
+Choosing the right algorithm
+
+I found that setting a maximum number of iterations of 1 million is reasonable give that I do not know the timeout. This is set in a variable numberOfIterationsBeforeChangingAlgorithm that I encourage the marker to change based on how long the timeout is. If the timeout is much longer than the length of time my code takes, then the variable should be increased to allow for more iterations using more effective algorithms before switching to faster but less effective ones. The reason we don’t increase the number is because random takes far fewer iterations, so while maxparts will be calculated to be over 1 million, random won’t necessarily. In order to calculate the number of iterations a certain algorithm will take, I predict the size of codeList and masterList before they are even made by using num^length or getting the current size depending on how many attempts have been made so far.
+
+Conclusion
+
+I used the chrono library to time specific parts of every function throughout the programme. This allowed me to reach 1 million iterations as being a good maximum before switching algorithms. After testing many different game many times, I got results I was happy with for attempts and time taken.
+For length = 4 and num = 6 maximum number of attempts taken is 6, and the average is exactly 4.57099 for maxparts. I got this number by creating a vector with every possible game for the length and num and playing it.  Each attempt takes only a second or two thanks to the initial masterList optimisations I implemented. The average for the random algorithm is 5.6 for the same length and num, and the maximum is 9, and for the brute force algorithm the maximum is 4 x 6 = 24, but the average is much higher than the other 2, although it only takes a few milliseconds to complete.
